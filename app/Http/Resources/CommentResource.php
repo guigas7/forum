@@ -21,6 +21,9 @@ class CommentResource extends JsonResource
             'body' => $this->body,
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'can' => [
+                'delete' => $request->user()?->can('delete', $this->resource),
+            ],
         ];
     }
 }
