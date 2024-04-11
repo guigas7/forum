@@ -15,7 +15,8 @@
                       @submit.prevent="() => commentIdBeingEdited ? updateComment() : addComment()" class="mt-4">
                     <div>
                         <InputLabel for="body" class="sr-only">Comment</InputLabel>
-                        <TextArea ref="commentTextAreaRef" id="body" v-model="commentForm.body" rows="4" placeholder="Speak your mind Spock…"/>
+                        <TextArea ref="commentTextAreaRef" id="body" v-model="commentForm.body" rows="4"
+                                  placeholder="Speak your mind Spock…"/>
                         <InputError :message="commentForm.errors.body" class="mt-1"/>
                     </div>
 
@@ -50,6 +51,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextArea from "@/Components/TextArea.vue";
 import {router, useForm} from "@inertiajs/vue3";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import {useConfirm} from "@/Utilities/Composables/useConfirm.js";
 
 const props = defineProps(['post', 'comments']);
 
@@ -77,18 +79,28 @@ const addComment = () => commentForm.post(route('posts.comments.store', props.po
     onSuccess: () => commentForm.reset(),
 });
 
-const updateComment = () => commentForm.put(route('comments.update', {
-    comment: commentIdBeingEdited.value,
-    page: props.comments.meta.current_page,
-}), {
-    preserveScroll: true,
-    onSuccess: cancelEditComment,
-});
+const {confirmation} = useConfirm();
 
-const deleteComment = (commentId) => router.delete(route('comments.destroy', {
-    comment: commentId,
-    page: props.comments.meta.current_page
-}), {
-    preserveScroll: true,
-});
+const updateComment = async () => {
+    if (!await confirmation('Are you sure you want to update this comment?')) {
+        commentTextAreaRef.value?.focus();
+        return;
+    }
+    commentForm.put(route('comments.update', {
+        comment: commentIdBeingEdited.value,
+        page: props.comments.meta.current_page,
+    }), {
+        preserveScroll: true,
+        onSuccess: cancelEditComment,
+    });
+};
+
+const deleteComment = async (commentId) => {
+    if (!await confirmation('Are you sure you want to delete this comment?')) {
+        return;
+    }
+    router.delete(route('comments.destroy', {comment: commentId, page: props.comments.meta.current_page}), {
+        preserveScroll: true,
+    });
+};
 </script>
