@@ -101,6 +101,7 @@
                     <i class="ri-h-3"></i>
                 </button>
             </li>
+            <slot name="toolbar" :editor="editor"/>
         </menu>
         <EditorContent :editor="editor"/>
     </div>
@@ -116,9 +117,15 @@ import 'remixicon/fonts/remixicon.css'
 import {Placeholder} from "@tiptap/extension-placeholder";
 
 const props = defineProps({
-    modelValue: '',
-    editorClass: '',
-    placeholder: null,
+    modelValue: {
+        default: ''
+    },
+    editorClass: {
+        default: 'min-h-[520px]'
+    },
+    placeholder: {
+        default: null
+    },
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -139,7 +146,7 @@ const editor = useEditor({
     ],
     editorProps: {
         attributes: {
-            class: `min-h-[512px] prose prose-sm max-w-none py-1.5 px-3 ${props.editorClass}`,
+            class: `prose prose-sm max-w-none py-1.5 px-3 ${props.editorClass}`
         },
     },
     onUpdate: () => emit('update:modelValue', editor.value?.storage.markdown.getMarkdown()),

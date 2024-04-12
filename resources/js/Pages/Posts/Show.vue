@@ -15,7 +15,6 @@
                     <div>
                         <InputLabel for="body" class="sr-only">Comment</InputLabel>
                         <MarkdownEditor ref="commentTextAreaRef" id="body" v-model="commentForm.body" placeholder="Speak your mind Spock…" editorClass="min-h-[160px]"/>
-                                  placeholder="Speak your mind Spock…"/>
                         <InputError :message="commentForm.errors.body" class="mt-1"/>
                     </div>
 
