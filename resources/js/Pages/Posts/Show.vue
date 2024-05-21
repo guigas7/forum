@@ -16,7 +16,7 @@
                     <div>
                         <InputLabel for="body" class="sr-only">Comment</InputLabel>
                         <MarkdownEditor ref="commentTextAreaRef" id="body" v-model="commentForm.body"
-                                        placeholder="Speak your mind Spock…" editorClass="min-h-[160px]"/>
+                                        placeholder="Speak your mind Spock…" editorClass="!min-h-[160px]"/>
                         <InputError :message="commentForm.errors.body" class="mt-1"/>
                     </div>
 
@@ -90,7 +90,9 @@ const updateComment = async () => {
     }
     commentForm.put(route('comments.update', {
         comment: commentIdBeingEdited.value,
-        page: props.comments.meta.current_page,
+        page: props.comments.data.length > 1
+            ? props.comments.meta.current_page
+            : Math.max(props.comments.meta.current_page - 1, 1)
     }), {
         preserveScroll: true,
         onSuccess: cancelEditComment,
