@@ -36,9 +36,4 @@ class PostFactory extends Factory
         return $this->sequence(...PostFixtures::getFixtures());
     }
 
-    private static function getFixtures(): Collection
-    {
-        return self::$fixtures ??= collect(File::files(database_path('factories/fixtures/posts')))
-            ->map(fn (SplFileInfo $fileInfo) => $fileInfo->getContents());
-    }
 }
