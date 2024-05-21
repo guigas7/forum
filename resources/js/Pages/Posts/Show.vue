@@ -1,7 +1,8 @@
 <template>
     <AppLayout :title="post.title">
         <Container>
-            <PageHeading>{{ post.title }}</PageHeading>
+            <Pill :href="route('posts.index', {topic: post.topic.slug})">{{ post.topic.name }}</Pill>
+            <PageHeading class="mt-2">{{ post.title }}</PageHeading>
             <span class="block mt-1 text-sm text-gray-600">{{ formattedDate }} ago by {{ post.user.name }}</span>
 
             <article class="mt-6 prose prose-sm max-w-none" v-html="post.html">
@@ -14,7 +15,8 @@
                       @submit.prevent="() => commentIdBeingEdited ? updateComment() : addComment()" class="mt-4">
                     <div>
                         <InputLabel for="body" class="sr-only">Comment</InputLabel>
-                        <MarkdownEditor ref="commentTextAreaRef" id="body" v-model="commentForm.body" placeholder="Speak your mind Spock…" editorClass="min-h-[160px]"/>
+                        <MarkdownEditor ref="commentTextAreaRef" id="body" v-model="commentForm.body"
+                                        placeholder="Speak your mind Spock…" editorClass="min-h-[160px]"/>
                         <InputError :message="commentForm.errors.body" class="mt-1"/>
                     </div>
 
@@ -51,6 +53,7 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {useConfirm} from "@/Utilities/Composables/useConfirm.js";
 import MarkdownEditor from "@/Components/MarkdownEditor.vue";
 import PageHeading from "@/Components/PageHeading.vue";
+import Pill from "@/Components/Pill.vue";
 
 const props = defineProps(['post', 'comments']);
 
